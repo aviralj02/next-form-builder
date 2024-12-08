@@ -10,9 +10,15 @@ import { QuestionType } from "@/typings/enums";
 
 type Props = {
   isDropdownVisible: boolean;
+  addQuestion: (questionType: QuestionType) => void;
+  isAbove: boolean;
 };
 
-const AddQuestionDropdown = ({ isDropdownVisible }: Props) => {
+const AddQuestionDropdown = ({
+  isDropdownVisible,
+  addQuestion,
+  isAbove,
+}: Props) => {
   const questionTypes = [
     {
       label: "Short Answer",
@@ -49,7 +55,8 @@ const AddQuestionDropdown = ({ isDropdownVisible }: Props) => {
   return (
     <ul
       className={cn(
-        "absolute top-8 transition-transform duration-300 origin-top border p-2 mt-2 shadow-lg rounded-lg w-full text-sm",
+        "absolute transition-transform duration-300 border p-2 mt-2 shadow-lg rounded-2xl w-full text-sm bg-white",
+        isAbove ? "bottom-full mb-2 origin-bottom" : "top-full mt-2 origin-top",
         isDropdownVisible ? "scale-100 opacity-100" : "scale-0 opacity-0"
       )}
     >
@@ -57,6 +64,7 @@ const AddQuestionDropdown = ({ isDropdownVisible }: Props) => {
         <li
           className="p-2 hover:bg-gray-100 rounded capitalize flex items-center gap-2 cursor-pointer"
           key={option.label}
+          onClick={() => addQuestion(option.type)}
         >
           {option.icon}
           {option.label}
