@@ -4,34 +4,26 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import PageWrapper from "./PageWrapper";
 import Button from "./Button";
 import Link from "next/link";
-import { ButtonType, QuestionType } from "@/typings/enums";
+import { ButtonType } from "@/typings/enums";
 import TopRightArrow from "./icons/TopRightArrow";
 import PlusIcon from "./icons/PlusIcon";
-import { Question } from "@/typings/typings";
 import AddQuestionDropdown from "./AddQuestionDropdown";
 import QuestionComponent from "./QuestionComponent";
 import { cn } from "@/lib/utils";
 import DraftIcon from "./icons/DraftIcon";
 import TickIcon from "./icons/TickIcon";
+import useQuestionStore from "@/store/questionStore";
 
 type Props = {};
 
 const FormBuilder = (props: Props) => {
+  const { questions } = useQuestionStore();
+
   const [formTitle, setFormTitle] = useState<string>("");
-  const [questions, setQuestions] = useState<Question[]>([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
   const [dropdownAbove, setDropdownAbove] = useState<boolean>(false);
 
   const buttonRef = useRef<HTMLDivElement | null>(null);
-
-  const addQuestion = (questionType: QuestionType) => {
-    setQuestions((prevQuestions) => [
-      ...prevQuestions,
-      { formId: "123", title: "Write a question", type: questionType },
-    ]);
-
-    setIsDropdownVisible(false);
-  };
 
   useEffect(() => {
     if (isDropdownVisible && buttonRef.current) {
@@ -52,7 +44,7 @@ const FormBuilder = (props: Props) => {
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setFormTitle(e.target.value)
           }
-          className="outline-none py-1 px-2 font-medium text-lg"
+          className="outline-none py-1 px-2 font-medium text-lg w-full"
         />
 
         <Link href="/preview">
@@ -68,8 +60,8 @@ const FormBuilder = (props: Props) => {
         style={{ height: "calc(100vh - 140px)" }}
       >
         <div className="flex flex-col gap-4">
-          {questions.map((ques, index) => (
-            <QuestionComponent key={index} ques={ques} />
+          {questions.map((ques) => (
+            <QuestionComponent key={ques.id} ques={ques} />
           ))}
         </div>
 
@@ -91,7 +83,7 @@ const FormBuilder = (props: Props) => {
 
           <AddQuestionDropdown
             isDropdownVisible={isDropdownVisible}
-            addQuestion={addQuestion}
+            setIsDropdownVisible={setIsDropdownVisible}
             isAbove={dropdownAbove}
           />
         </div>
@@ -101,8 +93,13 @@ const FormBuilder = (props: Props) => {
         <Button buttonType={ButtonType.ACTIVE}>
           <DraftIcon /> Save as Draft
         </Button>
-        <Button buttonType={ButtonType.SUBMIT}>
-          <TickIcon /> Publish
+        <Button
+          buttonType={ButtonType.SUBMIT}
+          onClick={() => {
+            console.log(questions);
+          }}
+        >
+          <TickIcon /> Publish form
         </Button>
       </div>
     </PageWrapper>

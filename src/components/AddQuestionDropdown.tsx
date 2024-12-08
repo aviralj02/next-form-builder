@@ -7,50 +7,35 @@ import UrlIcon from "./icons/UrlIcon";
 import DateIcon from "./icons/DateIcon";
 import NumberIcon from "./icons/NumberIcon";
 import { QuestionType } from "@/typings/enums";
+import useQuestionStore from "@/store/questionStore";
+import { questionTypes } from "@/lib/constants";
 
 type Props = {
   isDropdownVisible: boolean;
-  addQuestion: (questionType: QuestionType) => void;
+  setIsDropdownVisible: (value: boolean) => void;
   isAbove: boolean;
 };
 
 const AddQuestionDropdown = ({
   isDropdownVisible,
-  addQuestion,
+  setIsDropdownVisible,
   isAbove,
 }: Props) => {
-  const questionTypes = [
-    {
-      label: "Short Answer",
-      icon: <ShortAnswerIcon />,
-      type: QuestionType.SHORT_ANS,
-    },
-    {
-      label: "Long Answer",
-      icon: <LongAnswerIcon />,
-      type: QuestionType.LONG_ANS,
-    },
-    {
-      label: "Number",
-      icon: <NumberIcon />,
-      type: QuestionType.NUMBER,
-    },
-    {
-      label: "Single select",
-      icon: <SelectIcon />,
-      type: QuestionType.SINGLE_SELECT,
-    },
-    {
-      label: "URL",
-      icon: <UrlIcon />,
-      type: QuestionType.URL,
-    },
-    {
-      label: "Date",
-      icon: <DateIcon />,
-      type: QuestionType.DATE,
-    },
-  ];
+  const { addQuestion } = useQuestionStore();
+
+  const handleAddQuestion = (quesType: QuestionType) => {
+    addQuestion({
+      id: crypto.randomUUID(),
+      formId: "123",
+      title: "",
+      helpText: "",
+      type: quesType,
+      options:
+        quesType === QuestionType.SINGLE_SELECT ? ["Option 1"] : undefined,
+    });
+
+    setIsDropdownVisible(false);
+  };
 
   return (
     <ul
@@ -64,7 +49,7 @@ const AddQuestionDropdown = ({
         <li
           className="p-2 hover:bg-gray-100 rounded capitalize flex items-center gap-2 cursor-pointer"
           key={option.label}
-          onClick={() => addQuestion(option.type)}
+          onClick={() => handleAddQuestion(option.type)}
         >
           {option.icon}
           {option.label}
