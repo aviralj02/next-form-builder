@@ -24,7 +24,11 @@ const Preview = (props: Props) => {
 
   console.log(questions);
 
-  const handleAnswerCheck = (id: string, isFilled: boolean) => {
+  const handleAnswerCheck = (
+    id: string,
+    isFilled: boolean,
+    value: string | number | undefined
+  ) => {
     setAnswersCompleteness((prev) => ({ ...prev, [id]: isFilled }));
   };
 

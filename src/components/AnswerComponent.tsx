@@ -4,14 +4,22 @@ import React, { ChangeEvent, ReactNode } from "react";
 
 type Props = {
   ques: Question;
-  onAnswerChange: (id: string, isFilled: boolean) => void;
+  onAnswerChange: (
+    id: string,
+    isFilled: boolean,
+    value: string | number | undefined
+  ) => void;
 };
 
 const AnswerComponent = ({ ques, onAnswerChange }: Props) => {
   let inputArea: ReactNode;
 
   const handleAnswerChange = (value: string | number | undefined) => {
-    onAnswerChange(ques.id, Boolean(value && value.toString().trim() !== ""));
+    onAnswerChange(
+      ques.id,
+      Boolean(value && value.toString().trim() !== ""),
+      value
+    );
   };
 
   switch (ques.type) {

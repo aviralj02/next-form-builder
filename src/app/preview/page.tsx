@@ -1,10 +1,14 @@
 import Preview from "@/components/Preview";
-import React from "react";
+import React, { Suspense } from "react";
 
 type Props = {};
 
 const PreviewPage = (props: Props) => {
-  return <Preview />;
+  return (
+    <Suspense>
+      <Preview />
+    </Suspense>
+  );
 };
 
 export default PreviewPage;
