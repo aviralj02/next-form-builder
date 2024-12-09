@@ -21,12 +21,12 @@ const AddQuestionDropdown = ({
   setIsDropdownVisible,
   isAbove,
 }: Props) => {
-  const { addQuestion } = useQuestionStore();
+  const { addQuestion, formId } = useQuestionStore();
 
   const handleAddQuestion = (quesType: QuestionType) => {
     addQuestion({
       id: crypto.randomUUID(),
-      formId: "123",
+      formId: formId,
       title: "",
       helpText: "",
       type: quesType,

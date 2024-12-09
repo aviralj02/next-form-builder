@@ -32,7 +32,7 @@ const QuestionComponent = ({ ques }: Props) => {
       inputArea = (
         <input
           type="text"
-          className="outline-none border rounded-lg py-1 px-3"
+          className="outline-none border rounded-lg py-1 px-2 text-sm"
           disabled
         />
       );
@@ -42,7 +42,7 @@ const QuestionComponent = ({ ques }: Props) => {
       inputArea = (
         <textarea
           rows={3}
-          className="outline-none border rounded-lg resize-none py-1 px-3"
+          className="outline-none border rounded-lg resize-none py-1 px-2 text-sm"
           disabled
         />
       );
@@ -52,7 +52,7 @@ const QuestionComponent = ({ ques }: Props) => {
       inputArea = (
         <input
           type="number"
-          className="outline-none border rounded-lg py-1 px-3"
+          className="outline-none border rounded-lg py-1 px-2 text-sm"
           disabled
         />
       );
@@ -126,7 +126,7 @@ const QuestionComponent = ({ ques }: Props) => {
       inputArea = (
         <input
           type="text"
-          className="outline-none border rounded-lg py-1 px-3"
+          className="outline-none border rounded-lg py-1 px-2 text-sm"
           disabled
         />
       );
@@ -136,7 +136,7 @@ const QuestionComponent = ({ ques }: Props) => {
       inputArea = (
         <input
           type="date"
-          className="outline-none border rounded-lg py-1 px-3 text-[#959DA5]"
+          className="outline-none border rounded-lg py-1 px-2 text-[#959DA5] text-sm"
           disabled
         />
       );

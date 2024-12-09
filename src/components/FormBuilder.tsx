@@ -17,13 +17,22 @@ import useQuestionStore from "@/store/questionStore";
 type Props = {};
 
 const FormBuilder = (props: Props) => {
-  const { questions } = useQuestionStore();
+  const { questions, formId, setFormId } = useQuestionStore();
 
   const [formTitle, setFormTitle] = useState<string>("");
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
   const [dropdownAbove, setDropdownAbove] = useState<boolean>(false);
 
   const buttonRef = useRef<HTMLDivElement | null>(null);
+
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const title = e.target.value;
+    setFormTitle(title);
+
+    if (title && !formId) {
+      setFormId(crypto.randomUUID());
+    }
+  };
 
   useEffect(() => {
     if (isDropdownVisible && buttonRef.current) {
@@ -41,21 +50,31 @@ const FormBuilder = (props: Props) => {
           type="text"
           placeholder="Untitled Form"
           value={formTitle}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setFormTitle(e.target.value)
-          }
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleTitleChange(e)}
           className="outline-none py-1 px-2 font-medium text-lg w-full"
         />
 
-        <Link href="/preview">
-          <Button buttonType={ButtonType.ACTIVE} disabled>
+        <Link
+          target="_blank"
+          href={{
+            pathname: "/preview",
+            query: {
+              title: formTitle,
+              questions: JSON.stringify(questions),
+            },
+          }}
+        >
+          <Button
+            buttonType={ButtonType.ACTIVE}
+            disabled={questions.length === 0 || !formTitle}
+          >
             Preview <TopRightArrow />
           </Button>
         </Link>
       </div>
 
       {/* QUESTIONS */}
-      <div
+      <main
         className="flex flex-col p-6 h-full overflow-y-auto scrollbar"
         style={{ height: "calc(100vh - 140px)" }}
       >
@@ -87,7 +106,7 @@ const FormBuilder = (props: Props) => {
             isAbove={dropdownAbove}
           />
         </div>
-      </div>
+      </main>
 
       <div className="flex items-center justify-between py-4 px-6 border-t bg-[#F6F8FAE5]">
         <Button buttonType={ButtonType.ACTIVE}>

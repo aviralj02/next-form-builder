@@ -8,3 +8,11 @@ interface Question {
   type: QuestionType;
   options?: string[];
 }
+
+interface Answer {
+  id: string;
+  formId: string;
+  questionId: string;
+  answer: string;
+  type: QuestionType;
+}
