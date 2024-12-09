@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import DraftIcon from "./icons/DraftIcon";
 import TickIcon from "./icons/TickIcon";
 import useQuestionStore from "@/store/questionStore";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -22,7 +23,9 @@ const FormBuilder = (props: Props) => {
   const [formTitle, setFormTitle] = useState<string>("");
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
   const [dropdownAbove, setDropdownAbove] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
   const buttonRef = useRef<HTMLDivElement | null>(null);
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +35,35 @@ const FormBuilder = (props: Props) => {
     if (title && !formId) {
       setFormId(crypto.randomUUID());
     }
+  };
+
+  const handlePublishForm = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/publish", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          form: {
+            id: formId,
+            title: formTitle,
+          },
+          questions,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        router.replace(`/builder/publish-success?formId=${formId}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -114,11 +146,16 @@ const FormBuilder = (props: Props) => {
         </Button>
         <Button
           buttonType={ButtonType.SUBMIT}
-          onClick={() => {
-            console.log(questions);
-          }}
+          onClick={handlePublishForm}
+          disabled={questions.length === 0 || !formTitle}
         >
-          <TickIcon /> Publish form
+          {isLoading ? (
+            <>Publishing...</>
+          ) : (
+            <>
+              <TickIcon /> Publish form
+            </>
+          )}
         </Button>
       </div>
     </PageWrapper>

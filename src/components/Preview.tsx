@@ -1,9 +1,9 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import PageWrapper from "./PageWrapper";
-import { ButtonType, QuestionType } from "@/typings/enums";
+import { ButtonType } from "@/typings/enums";
 import Button from "./Button";
 import { Question } from "@/typings/typings";
 import AnswerComponent from "./AnswerComponent";
@@ -35,41 +35,43 @@ const Preview = (props: Props) => {
   const progress = Math.round((filledAnswers / totalQuestions!) * 100);
 
   return (
-    <PageWrapper className="min-h-screen border grid grid-rows-[auto_1fr_auto]">
-      <div className="flex items-center justify-between gap-4 py-4 px-6 border-b">
-        <h1 className="outline-none font-medium text-lg w-full">{title}</h1>
+    <Suspense>
+      <PageWrapper className="min-h-screen border grid grid-rows-[auto_1fr_auto]">
+        <div className="flex items-center justify-between gap-4 py-4 px-6 border-b">
+          <h1 className="outline-none font-medium text-lg w-full">{title}</h1>
 
-        <div className="flex flex-col w-full items-end gap-2">
-          <span className="text-sm">Form Completeness — {progress}%</span>
+          <div className="flex flex-col w-full items-end gap-2">
+            <span className="text-sm">Form Completeness — {progress}%</span>
 
-          <div className="w-full bg-[#E1E4E8] rounded-full h-1">
-            <div
-              className="bg-[#00AA45] h-1 rounded-full transition-all"
-              style={{ width: `${progress}%` }}
-            />
+            <div className="w-full bg-[#E1E4E8] rounded-full h-1">
+              <div
+                className="bg-[#00AA45] h-1 rounded-full transition-all"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <main
-        className="flex flex-col gap-4 p-6 h-full overflow-y-auto scrollbar"
-        style={{ height: "calc(100vh - 140px)" }}
-      >
-        {questions?.map((ques) => (
-          <AnswerComponent
-            key={ques.id}
-            ques={ques}
-            onAnswerChange={handleAnswerCheck}
-          />
-        ))}
-      </main>
+        <main
+          className="flex flex-col gap-4 p-6 h-full overflow-y-auto scrollbar"
+          style={{ height: "calc(100vh - 140px)" }}
+        >
+          {questions?.map((ques) => (
+            <AnswerComponent
+              key={ques.id}
+              ques={ques}
+              onAnswerChange={handleAnswerCheck}
+            />
+          ))}
+        </main>
 
-      <div className="flex items-center justify-end py-4 px-6 border-t bg-[#F6F8FAE5]">
-        <Button buttonType={ButtonType.SUBMIT} disabled>
-          Submit
-        </Button>
-      </div>
-    </PageWrapper>
+        <div className="flex items-center justify-end py-4 px-6 border-t bg-[#F6F8FAE5]">
+          <Button buttonType={ButtonType.SUBMIT} disabled>
+            Submit
+          </Button>
+        </div>
+      </PageWrapper>
+    </Suspense>
   );
 };
 
