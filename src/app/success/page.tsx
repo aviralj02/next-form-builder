@@ -1,6 +1,7 @@
 "use client";
 
 import PageWrapper from "@/components/PageWrapper";
+import Link from "next/link";
 import React from "react";
 
 type Props = {};
@@ -19,9 +20,9 @@ const SuccessPage = (props: Props) => {
       <p>Thank you for filling up your responses.</p>
       <p className="mt-2">
         <span className="font-semibold">Access your responses here: </span>
-        <a href="/responses" className="hover:underline">
+        <Link href="/responses" className="hover:underline">
           {URL + "/responses"}
-        </a>
+        </Link>
       </p>
     </PageWrapper>
   );
