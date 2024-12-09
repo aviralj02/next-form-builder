@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import DownloadIcon from "@/components/icons/DownloadIcon";
 import { ButtonType } from "@/typings/enums";
 import Link from "next/link";
 
@@ -29,9 +30,17 @@ export default function Home() {
                 required.
               </p>
             </div>
-            <Link href="/builder">
-              <Button buttonType={ButtonType.ACTIVE}>Get Started</Button>
-            </Link>
+
+            <div className="flex items-center gap-2">
+              <Link href="/builder">
+                <Button buttonType={ButtonType.ACTIVE}>Get Started</Button>
+              </Link>
+              <Link href="/responses">
+                <Button buttonType={ButtonType.SUBMIT}>
+                  Download Responses
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
       </main>

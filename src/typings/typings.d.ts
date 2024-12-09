@@ -16,3 +16,8 @@ interface Answer {
   answer: string;
   type: QuestionType;
 }
+
+type ResponseData = {
+  question: string;
+  answer: string;
+};
