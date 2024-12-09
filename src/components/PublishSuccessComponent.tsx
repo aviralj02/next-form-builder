@@ -24,7 +24,7 @@ const PublishSuccessComponent = (props: Props) => {
         {" "}
         Your form is now live with ID: <em>{formId}</em>
       </p>
-      <p className="mt-4">
+      <p className="mt-4 text-center">
         Accessible at:{" "}
         <code>
           <a href={URL + "/" + formId} className="hover:underline">

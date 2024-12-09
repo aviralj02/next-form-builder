@@ -20,13 +20,13 @@ export async function GET(
       .where(eq(Answers.formId, formId));
 
     const data = questions.map((question) => {
-      const answer =
-        answers.find((ans) => ans.questionId === question.id)?.answer ||
-        "No Response";
+      const questionAnswers = answers
+        .filter((ans) => ans.questionId === question.id)
+        .map((ans) => ans.answer || "No Response");
 
       return {
         question: question.title,
-        answer,
+        answers: questionAnswers,
       };
     });
 
