@@ -27,7 +27,9 @@ const PublishSuccessComponent = (props: Props) => {
       <p className="mt-4">
         Accessible at:{" "}
         <code>
-          <a href={URL + "/" + formId}>{URL + "/" + formId}</a>
+          <a href={URL + "/" + formId} className="hover:underline">
+            {URL + "/" + formId}
+          </a>
         </code>
       </p>
     </PageWrapper>

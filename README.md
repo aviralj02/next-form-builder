@@ -1,6 +1,27 @@
 ## Next Form Builder (Peerlist Assignment)
 
-A simple form builder lets users create customizable forms with various question types and publish them.
+A simple form builder lets users create customizable forms with various question types and publish them to collect responses.
+
+### 🔧 Tech Stack
+
+- Framework - [Next.js](https://nextjs.org/)
+- Styling - [Taiwlind CSS](https://tailwindcss.com/)
+- Database - PostgreSQL [(Xata)](https://xata.io/)
+- ORM - [Drizzle ORM](https://orm.drizzle.team/)
+
+### Local Setup
+
+```bash
+$ git clone https://github.com/aviralj02/next-form-builder.git
+$ cd next-form-builder
+$ yarn install
+```
+
+- Add `.env` credentials like in [.env.example](./.env.example).
+
+```bash
+$ yarn dev
+```
 
 ### Assumptions
 
