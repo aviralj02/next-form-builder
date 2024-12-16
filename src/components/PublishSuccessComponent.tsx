@@ -3,6 +3,7 @@
 import React from "react";
 import PageWrapper from "./PageWrapper";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 type Props = {};
 
@@ -24,12 +25,22 @@ const PublishSuccessComponent = (props: Props) => {
         {" "}
         Your form is now live with ID: <em>{formId}</em>
       </p>
+
       <p className="mt-4 text-center">
-        Accessible at:{" "}
+        <span className="font-bold">Accessible at: </span>
         <code>
-          <a href={URL + "/" + formId} className="hover:underline">
+          <Link href={URL + "/" + formId} className="hover:underline">
             {URL + "/" + formId}
-          </a>
+          </Link>
+        </code>
+      </p>
+
+      <p className="mt-2">
+        <span className="font-bold">Access your responses here: </span>
+        <code>
+          <Link href="/responses" className="hover:underline">
+            {URL + "/responses"}
+          </Link>
         </code>
       </p>
     </PageWrapper>

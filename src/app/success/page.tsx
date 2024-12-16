@@ -18,12 +18,6 @@ const SuccessPage = (props: Props) => {
         Submissions Recorded!
       </h1>
       <p>Thank you for filling up your responses.</p>
-      <p className="mt-2">
-        <span className="font-semibold">Access your responses here: </span>
-        <Link href="/responses" className="hover:underline">
-          {URL + "/responses"}
-        </Link>
-      </p>
     </PageWrapper>
   );
 };

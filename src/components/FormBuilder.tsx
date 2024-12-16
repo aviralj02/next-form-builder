@@ -9,11 +9,26 @@ import TopRightArrow from "./icons/TopRightArrow";
 import PlusIcon from "./icons/PlusIcon";
 import AddQuestionDropdown from "./AddQuestionDropdown";
 import QuestionComponent from "./QuestionComponent";
-import { cn } from "@/lib/utils";
-import DraftIcon from "./icons/DraftIcon";
+import { arrayMove, cn } from "@/lib/utils";
 import TickIcon from "./icons/TickIcon";
 import useQuestionStore from "@/store/questionStore";
 import { useRouter } from "next/navigation";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
 type Props = {};
 
@@ -66,6 +81,30 @@ const FormBuilder = (props: Props) => {
     setIsLoading(false);
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = questions.findIndex(
+        (question) => question.id === active.id
+      );
+      const newIndex = questions.findIndex(
+        (question) => question.id === over?.id
+      );
+      const updatedQuestions = arrayMove(questions, oldIndex, newIndex);
+
+      useQuestionStore.setState({ questions: updatedQuestions });
+    }
+  };
+
+  const dragSensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+    useSensor(TouchSensor)
+  );
+
   useEffect(() => {
     if (isDropdownVisible && buttonRef.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect();
@@ -106,44 +145,53 @@ const FormBuilder = (props: Props) => {
       </div>
 
       {/* QUESTIONS */}
-      <main
-        className="flex flex-col p-6 h-full overflow-y-auto scrollbar"
-        style={{ height: "calc(100vh - 140px)" }}
+      <DndContext
+        onDragEnd={handleDragEnd}
+        sensors={dragSensors}
+        collisionDetection={closestCenter}
+        modifiers={[restrictToVerticalAxis]}
       >
-        <div className="flex flex-col gap-4">
-          {questions.map((ques) => (
-            <QuestionComponent key={ques.id} ques={ques} />
-          ))}
-        </div>
-
-        <div
-          className={cn(
-            "relative self-center max-w-72 w-full flex flex-col items-center",
-            questions.length === 0 ? "" : "mt-8"
-          )}
-          ref={buttonRef}
+        <SortableContext
+          items={questions}
+          strategy={verticalListSortingStrategy}
         >
-          <Button
-            buttonType={ButtonType.ACTIVE}
-            className="w-fit"
-            onClick={() => setIsDropdownVisible((prev) => !prev)}
+          <main
+            className="flex flex-col p-6 h-full overflow-y-auto scrollbar"
+            style={{ height: "calc(100vh - 140px)" }}
           >
-            <PlusIcon />
-            Add Question
-          </Button>
+            <div className="flex flex-col gap-4">
+              {questions.map((ques) => (
+                <QuestionComponent key={ques.id} ques={ques} />
+              ))}
+            </div>
 
-          <AddQuestionDropdown
-            isDropdownVisible={isDropdownVisible}
-            setIsDropdownVisible={setIsDropdownVisible}
-            isAbove={dropdownAbove}
-          />
-        </div>
-      </main>
+            <div
+              className={cn(
+                "relative self-center max-w-72 w-full flex flex-col items-center",
+                questions.length === 0 ? "" : "mt-8"
+              )}
+              ref={buttonRef}
+            >
+              <Button
+                buttonType={ButtonType.ACTIVE}
+                className="w-fit"
+                onClick={() => setIsDropdownVisible((prev) => !prev)}
+              >
+                <PlusIcon />
+                Add Question
+              </Button>
 
-      <div className="flex items-center justify-between py-4 px-6 border-t bg-[#F6F8FAE5]">
-        <Button buttonType={ButtonType.ACTIVE}>
-          <DraftIcon /> Save as Draft
-        </Button>
+              <AddQuestionDropdown
+                isDropdownVisible={isDropdownVisible}
+                setIsDropdownVisible={setIsDropdownVisible}
+                isAbove={dropdownAbove}
+              />
+            </div>
+          </main>
+        </SortableContext>
+      </DndContext>
+
+      <div className="flex justify-end py-4 px-6 border-t bg-[#F6F8FAE5]">
         <Button
           buttonType={ButtonType.SUBMIT}
           onClick={handlePublishForm}

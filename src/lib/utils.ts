@@ -1,3 +1,4 @@
+import { Question } from "@/typings/typings";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import * as XLSX from "xlsx";
@@ -28,3 +29,14 @@ export const generateExcelFile = (
 
   XLSX.writeFile(workbook, "form_responses.xlsx");
 };
+
+export function arrayMove(
+  array: Question[],
+  fromIndex: number,
+  toIndex: number
+) {
+  const newArray = [...array];
+  const [movedItem] = newArray.splice(fromIndex, 1);
+  newArray.splice(toIndex, 0, movedItem);
+  return newArray;
+}

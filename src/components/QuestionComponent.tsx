@@ -13,6 +13,8 @@ import useQuestionStore from "@/store/questionStore";
 import PlusIcon from "./icons/PlusIcon";
 import { cn } from "@/lib/utils";
 import { questionTypes } from "@/lib/constants";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
   ques: Question;
@@ -22,6 +24,16 @@ const QuestionComponent = ({ ques }: Props) => {
   const { updateQuestion, removeQuestion } = useQuestionStore();
   const [isTypeDropdownVisible, setIsTypeDropdownVisible] =
     useState<boolean>(false);
+
+  const { setNodeRef, transform, transition, attributes, listeners } =
+    useSortable({
+      id: ques.id,
+    });
+
+  const style = {
+    transform: transform ? CSS.Translate.toString(transform) : undefined,
+    transition,
+  };
 
   let icon: ReactNode;
   let inputArea: ReactNode;
@@ -147,7 +159,11 @@ const QuestionComponent = ({ ques }: Props) => {
   }
 
   return (
-    <div className="p-4 border rounded-2xl flex flex-col gap-2 hover:bg-[#FAFBFC]">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="p-4 border w-full rounded-2xl touch-auto flex flex-col gap-2 hover:bg-[#FAFBFC] bg-white"
+    >
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1 w-full mr-5">
           <input
@@ -187,7 +203,7 @@ const QuestionComponent = ({ ques }: Props) => {
             {/* Dropdown Menu */}
             <ul
               className={cn(
-                "absolute top-full transition-transform duration-300 right-0 mt-2 w-max origin-top-right bg-white border rounded-lg shadow-lg z-10",
+                "absolute top-full transition-transform duration-300 px-3 py-2 right-0 mt-2 w-max origin-top-right bg-white border rounded-lg shadow-lg z-10",
                 isTypeDropdownVisible
                   ? "scale-100 opacity-100"
                   : "scale-0 opacity-0"
@@ -196,7 +212,7 @@ const QuestionComponent = ({ ques }: Props) => {
               {questionTypes.map((option) => (
                 <li
                   key={option.type}
-                  className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer text-xs font-medium"
+                  className="flex items-center gap-3 p-2 hover:bg-gray-100 cursor-pointer text-xs font-medium"
                   onClick={() => {
                     updateQuestion(ques.id, { type: option.type });
                     setIsTypeDropdownVisible(false);
@@ -208,7 +224,7 @@ const QuestionComponent = ({ ques }: Props) => {
               ))}
 
               <li
-                className="flex items-center gap-2 p-2 hover:bg-gray-100 text-red-500 cursor-pointer text-xs font-medium"
+                className="flex items-center gap-3 p-2 hover:bg-gray-100 text-red-500 cursor-pointer text-xs font-medium"
                 onClick={() => removeQuestion(ques.id)}
               >
                 <PlusIcon className="transform rotate-45" danger />
@@ -217,7 +233,7 @@ const QuestionComponent = ({ ques }: Props) => {
             </ul>
           </div>
 
-          <div className="opacity-50">
+          <div className="opacity-50" {...attributes} {...listeners}>
             <DragIcon />
           </div>
         </div>
